@@ -23,10 +23,11 @@ function illustrate(base) {
   }).map(l => {
     const id = l.id, p = (l.paint = l.paint || {})
     const scale = v => {
-      if (typeof v === 'number') return v * 0.55
+      if (typeof v === 'number') return v * 0.4
       if (Array.isArray(v) && (v[0] === 'interpolate' || v[0] === 'step')) {
-        const start = v[0] === 'interpolate' ? 3 : 2
-        return v.map((x, i) => (i >= start && (i - start) % 2 === 1 && typeof x === 'number' ? x * 0.55 : x))
+        // interpolate: [op, type, input, z, out, z, out…]  step: [op, input, out, z, out…]
+        const isOut = v[0] === 'interpolate' ? i => i >= 4 && i % 2 === 0 : i => i >= 2 && i % 2 === 0
+        return v.map((x, i) => (isOut(i) && typeof x === 'number' ? x * 0.4 : x))
       }
       return v
     }

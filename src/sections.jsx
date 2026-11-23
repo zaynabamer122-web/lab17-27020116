@@ -45,7 +45,7 @@ export function Collections({ onOpen }) {
       gsap.set(folios, { x: (i) => i * 3, y: (i) => -i * 3, rotation: (i) => (i - 2) * 2.2 })
       const tl = gsap.timeline({ scrollTrigger: { trigger: root.current, start: 'top top', end: '+=120%', pin: true, scrub: 0.6 } })
       tl.to(folios, {
-        x: (i) => (i - (n - 1) / 2) * 252,
+        x: (i) => (i - (n - 1) / 2) * Math.min(256, (window.innerWidth - 340) / (n - 1)),
         y: (i) => Math.abs(i - (n - 1) / 2) * 26,
         rotation: (i) => (i - (n - 1) / 2) * 5,
         ease: 'power2.out', stagger: 0.04,
@@ -64,7 +64,6 @@ export function Collections({ onOpen }) {
 }
 
 /* ======================= IV. The Art of Wandering ======================= */
-const POS = [[60, 70], [250, 180], [440, 80], [620, 200], [800, 90]]
 
 export function Wandering({ onRoute }) {
   const root = useRef(null)
@@ -72,7 +71,7 @@ export function Wandering({ onRoute }) {
   const [status, setStatus] = useState('')
   const w = WANDERS.find(x => x.id === wid)
   const stops = w.stops.map(id => placeById[id])
-  const pts = stops.map((_, i) => POS[Math.round((i * (POS.length - 1)) / Math.max(1, stops.length - 1))])
+  const pts = stops.map((_, i) => [70 + (i * 560) / Math.max(1, stops.length - 1), i % 2 ? 196 : 74])
   const d = pts.reduce((acc, [x, y], i) => {
     if (i === 0) return `M${x},${y}`
     const [px, py] = pts[i - 1]
@@ -106,7 +105,7 @@ export function Wandering({ onRoute }) {
         ))}
       </div>
       <div className="wander-plan" role="tabpanel">
-        <svg viewBox="0 0 860 280" className="wander-svg" aria-label={`Route: ${stops.map(s => s.name).join(', then ')}`}>
+        <svg viewBox="0 0 700 290" className="wander-svg" aria-label={`Route: ${stops.map(s => s.name).join(', then ')}`}>
           <path d={d} className="wander-shadow" />
           <motion.path key={wid} d={d} className="wander-line" style={{ pathLength: draw }} />
           {pts.map(([x, y], i) => (

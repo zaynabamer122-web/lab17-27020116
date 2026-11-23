@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef } from 'react'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { gsap, scrollToId } from './ui.jsx'
 import { drawSurvey, GATES, W, H } from './survey.js'
 import { prefersReduced } from './lib.js'
@@ -29,6 +29,7 @@ function Domes({ x, y, s = 1, minarets = 4 }) {
 export default function Hero() {
   const root = useRef(null)
   const s = useMemo(() => drawSurvey(1846), [])
+  const [narrow] = useState(() => window.matchMedia('(max-width: 700px)').matches)
 
   useLayoutEffect(() => {
     const reduce = prefersReduced()
@@ -41,7 +42,8 @@ export default function Hero() {
       }
       gsap.set(ink, { strokeDasharray: 1, strokeDashoffset: 1 })
       // 1 — the survey inks itself in
-      gsap.to(ink, { strokeDashoffset: 0, duration: 2.6, ease: 'power2.inOut', stagger: { each: 0.09, from: 'random' }, delay: 0.15 })
+      gsap.to(ink, { strokeDashoffset: 0, duration: 2.6, ease: 'power2.inOut', stagger: { each: 0.09, from: 'random' }, delay: 0.15,
+        onComplete: () => { gsap.set(ink, { strokeDasharray: 'none' }); root.current?.querySelector('.hero-survey')?.classList.add('ink-done') } })
       gsap.from('.hero-copy > *', { y: 22, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.09, delay: 0.35 })
       gsap.from('.cypress-row', { opacity: 0, duration: 1.2, delay: 1.6 })
 
@@ -62,7 +64,7 @@ export default function Hero() {
 
   return (
     <section className="hero" id="top" ref={root} aria-label="Introduction">
-      <svg className="hero-survey" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <svg className="hero-survey" viewBox={narrow ? '190 120 680 470' : `-300 0 ${W + 300} ${H}`} preserveAspectRatio={narrow ? 'xMidYMin meet' : 'xMidYMid slice'} aria-hidden="true">
         <defs>
           <filter id="bleed" x="-10%" y="-10%" width="120%" height="120%">
             <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="7" />

@@ -82,7 +82,7 @@ export function drawSurvey(seed = 1846) {
   const grid = []
   for (let gy = -1; gy <= H / step + 1; gy++) {
     grid[gy + 1] = []
-    for (let gx = -1; gx <= W / step + 1; gx++) grid[gy + 1][gx + 1] = [gx * step + R(-jit, jit), gy * step + R(-jit, jit)]
+    for (let gx = -11; gx <= W / step + 1; gx++) grid[gy + 1][gx + 11] = [gx * step + R(-jit, jit), gy * step + R(-jit, jit)]
   }
   let fields = ''
   const keep = (a, b) => {
