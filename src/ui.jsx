@@ -411,6 +411,7 @@ export function Footer() {
           <p className="footer-line">A guide to the spaces between home, university and work.</p>
           <ScaleBar label="metres from your door" />
           <p className="footer-small">Surveyed in Lahore · {new Date().getFullYear()} · <span className="urdu" lang="ur">لاہور</span></p>
+          <p className="footer-small">Last surveyed November 2026</p>
           <p className="footer-small">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" data-cursor="link">OpenStreetMap contributors</a>, tiles by <a href="https://openfreemap.org" target="_blank" rel="noreferrer" data-cursor="link">OpenFreeMap</a>. Timings and fees change, so check before you go.</p>
           <p className="footer-small">Lab 17 · 27020116</p>
         </div>
