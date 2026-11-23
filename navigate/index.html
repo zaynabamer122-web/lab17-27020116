@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Navigation · Third Place</title>
+  <meta name="description" content="The working map of Third Place: real Lahore streets, places near you, opening hours and the way there.">
+  <meta name="theme-color" content="#F0E8D8">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Crect width='24' height='28' fill='%23F0E8D8'/%3E%3Cpath d='M4 26V12C4 7 8 4 12 2C16 4 20 7 20 12V26' fill='none' stroke='%23463B35' stroke-width='1.4'/%3E%3Cpath d='M2 26H22' stroke='%23A86F70' stroke-width='1.4'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Manrope:wght@200;300;400&family=Noto+Nastaliq+Urdu:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="navigate.css">
+</head>
+<body>
+  <header class="nav">
+    <a class="wordmark" href="../index.html">
+      <svg class="arch-mark" viewBox="0 0 24 28" width="22" height="26" aria-hidden="true">
+        <path d="M3 27V12C3 6.5 7.5 3 12 1C16.5 3 21 6.5 21 12V27" fill="none" stroke="currentColor" stroke-width=".9"/>
+        <path d="M7 27V13C7 9.5 9.5 7 12 5.6C14.5 7 17 9.5 17 13V27" fill="none" stroke="currentColor" stroke-width=".6" opacity=".6"/>
+        <path d="M1 27H23" stroke="currentColor" stroke-width=".9"/>
+      </svg>
+      <span class="wordmark-text">THIRD PLACE<small>The Lahore Atlas</small></span>
+    </a>
+    <nav class="nav-index" aria-label="Atlas index">
+      <a href="../index.html#discover"><i>I</i>Discover</a>
+      <a href="../index.html#atlas" aria-current="page"><i>II</i>The Atlas</a>
+      <a href="../index.html#collections"><i>III</i>Collections</a>
+      <button type="button" id="my-places-btn"><i>IV</i>My Places<span class="nav-count" id="saved-count" hidden></span></button>
+      <a href="../about.html"><i>V</i>Colophon</a>
+    </nav>
+    <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-index">Index</button>
+  </header>
+
+  <main class="app">
+    <aside class="panel" id="panel" data-sheet="half" aria-label="Find places and the way there">
+      <button class="panel-handle" id="panel-handle" type="button" aria-label="Resize panel"><span></span></button>
+
+      <div class="panel-scroll" id="panel-scroll">
+        <!-- Lahori Gate · I : intentions -->
+        <section class="view" data-view="find">
+          <p class="gate"><svg class="quatrefoil" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 2C15 2 15.5 6 12 8.5C8.5 6 9 2 12 2ZM22 12C22 15 18 15.5 15.5 12C18 8.5 22 9 22 12ZM12 22C9 22 8.5 18 12 15.5C15.5 18 15 22 12 22ZM2 12C2 9 6 8.5 8.5 12C6 15.5 2 15 2 12Z" fill="none" stroke="currentColor" stroke-width=".8"/></svg>Lahori Gate · I</p>
+          <h1>The working map</h1>
+          <p class="lede">Real streets, real places, and the way there. Tell us what you are looking for, and we will survey what is near.</p>
+          <p class="mode-switch">Navigation mode · <a href="../index.html#atlas">return to the illustrated atlas</a></p>
+
+          <div class="field">
+            <label for="place-search">Begin from a street or neighbourhood</label>
+            <div class="combobox">
+              <input id="place-search" type="search" autocomplete="off" placeholder="Liberty Market, Mall Road, Anarkali…"
+                     role="combobox" aria-expanded="false" aria-controls="place-search-list" aria-autocomplete="list">
+              <ul class="suggestions" id="place-search-list" role="listbox" hidden></ul>
+            </div>
+          </div>
+          <p class="here-row">
+            <span id="here-label">Surveying around the middle of the map.</span>
+            <button type="button" class="link-btn" id="locate-btn">Use where I am</button>
+          </p>
+
+          <fieldset class="choices" data-group="intent">
+            <legend><span class="num">①</span> What are you hoping for?</legend>
+            <button type="button" class="chip" data-value="read">Somewhere to read</button>
+            <button type="button" class="chip" data-value="breathe">Somewhere to breathe</button>
+            <button type="button" class="chip" data-value="work">Somewhere to think</button>
+            <button type="button" class="chip" data-value="talk">Somewhere to talk</button>
+            <button type="button" class="chip" data-value="wander">Somewhere old</button>
+          </fieldset>
+
+          <fieldset class="choices" data-group="budget">
+            <legend><span class="num">②</span> What would you like to spend?</legend>
+            <button type="button" class="chip" data-value="free">Free</button>
+            <button type="button" class="chip" data-value="low">Up to Rs. 500</button>
+            <button type="button" class="chip" data-value="mid">Rs. 500–1,500</button>
+            <button type="button" class="chip" data-value="any">It does not matter</button>
+          </fieldset>
+
+          <fieldset class="choices" data-group="company">
+            <legend><span class="num">③</span> Who is coming with you?</legend>
+            <button type="button" class="chip" data-value="solo">Only me</button>
+            <button type="button" class="chip" data-value="friend">A friend</button>
+            <button type="button" class="chip" data-value="group">A group</button>
+            <button type="button" class="chip" data-value="family">Family</button>
+          </fieldset>
+
+          <fieldset class="choices" data-group="radius">
+            <legend><span class="num">④</span> How far will you go?</legend>
+            <button type="button" class="chip" data-value="1000">1 km</button>
+            <button type="button" class="chip is-on" data-value="2500" aria-pressed="true">2.5 km</button>
+            <button type="button" class="chip" data-value="5000">5 km</button>
+          </fieldset>
+
+          <p class="hint" id="find-hint" role="status"></p>
+          <button type="button" class="btn btn-ink btn-block" id="find-btn">Survey what is near</button>
+        </section>
+
+        <!-- Bhati Gate · II : what we found -->
+        <section class="view" data-view="results" hidden>
+          <button type="button" class="back-btn" data-back="find">← Change my answers</button>
+          <p class="gate">Bhati Gate · II</p>
+          <h2 id="results-title">Places for you</h2>
+          <p class="muted" id="results-sub"></p>
+          <div id="results-list" class="results-list" aria-live="polite"></div>
+        </section>
+
+        <!-- Mori Gate · III : one place -->
+        <section class="view" data-view="place" hidden>
+          <button type="button" class="back-btn" id="place-back">← Back to the list</button>
+          <p class="gate">Mori Gate · III</p>
+          <div id="place-detail"></div>
+        </section>
+
+        <!-- Delhi Gate · IV : the way there -->
+        <section class="view" data-view="directions" hidden>
+          <button type="button" class="back-btn" id="directions-back">← Back</button>
+          <p class="gate">Delhi Gate · IV</p>
+          <h2>The way there</h2>
+
+          <div class="route-fields">
+            <div class="field">
+              <label for="from-input">From</label>
+              <div class="combobox">
+                <input id="from-input" type="search" autocomplete="off" placeholder="A street, place or neighbourhood"
+                       role="combobox" aria-expanded="false" aria-controls="from-list" aria-autocomplete="list">
+                <ul class="suggestions" id="from-list" role="listbox" hidden></ul>
+              </div>
+              <div class="field-actions">
+                <button type="button" class="link-btn" id="from-me">Use where I am</button>
+                <button type="button" class="link-btn" id="from-pick">Mark it on the map</button>
+              </div>
+            </div>
+            <button type="button" class="swap-btn" id="swap-btn" aria-label="Swap start and destination">⇅</button>
+            <div class="field">
+              <label for="to-input">To</label>
+              <div class="combobox">
+                <input id="to-input" type="search" autocomplete="off" placeholder="Where you are going"
+                       role="combobox" aria-expanded="false" aria-controls="to-list" aria-autocomplete="list">
+                <ul class="suggestions" id="to-list" role="listbox" hidden></ul>
+              </div>
+              <div class="field-actions">
+                <button type="button" class="link-btn" id="to-pick">Mark it on the map</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="segmented" role="radiogroup" aria-label="How you are travelling">
+            <button type="button" role="radio" data-mode="foot" aria-checked="true">On foot</button>
+            <button type="button" role="radio" data-mode="car" aria-checked="false">Car or rickshaw</button>
+            <button type="button" role="radio" data-mode="bike" aria-checked="false">Bicycle</button>
+          </div>
+
+          <div id="route-summary" class="route-summary" aria-live="polite"></div>
+          <button type="button" class="btn btn-ink btn-block" id="start-nav" hidden>Begin the journey</button>
+          <ol id="route-steps" class="route-steps"></ol>
+        </section>
+
+        <!-- Shah Burj Gate · V : saved -->
+        <section class="view" data-view="saved" hidden>
+          <button type="button" class="back-btn" data-back="find">← Back</button>
+          <p class="gate">Shah Burj Gate · V</p>
+          <h2>My places</h2>
+          <p class="muted">Places you have sealed on this map. They stay in this browser.</p>
+          <div id="saved-list" class="results-list"></div>
+        </section>
+
+        <footer class="site-footer">
+          <div class="scale" aria-label="Map scale">
+            <svg viewBox="0 0 120 10" width="120" height="10" aria-hidden="true">
+              <path d="M0.5 9V3M120 9V3M0.5 6H120" stroke="currentColor" stroke-width=".7" fill="none"/>
+              <rect x="0.5" y="4.5" width="30" height="3" fill="currentColor" opacity=".7"/>
+              <rect x="60" y="4.5" width="30" height="3" fill="currentColor" opacity=".7"/>
+            </svg>
+            <span id="scale-label">500 m</span>
+          </div>
+          <p>Surveyed in Lahore · <span id="year"></span> · <span class="urdu" lang="ur">لاہور</span></p>
+          <p class="small">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Search by Photon, routes by OSRM. Timings and fees change, so check before you go.</p>
+        </footer>
+      </div>
+    </aside>
+
+    <div class="map-wrap">
+      <div id="map" role="region" aria-label="Map of Lahore"></div>
+
+      <button type="button" class="map-btn" id="map-locate" aria-label="Show where I am" title="Show where I am">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="3.5" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1"/><path d="M12 1v3.5M12 19.5V23M1 12h3.5M19.5 12H23" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+      </button>
+
+      <div class="pick-banner" id="pick-banner" hidden>
+        <span id="pick-text">Touch the map to mark a spot.</span>
+        <button type="button" class="link-btn" id="pick-cancel">Cancel</button>
+      </div>
+
+      <div class="nav-banner" id="nav-banner" hidden>
+        <div class="nav-main">
+          <span class="nav-arrow" id="nav-arrow" aria-hidden="true">↑</span>
+          <div>
+            <p class="nav-dist" id="nav-dist"></p>
+            <p class="nav-text" id="nav-text"></p>
+          </div>
+        </div>
+        <div class="nav-foot">
+          <span id="nav-remaining"></span>
+          <button type="button" class="btn btn-small btn-seal" id="nav-stop">End</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn-small btn-paper recenter" id="recenter-btn" hidden>Recentre</button>
+
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="hours.js"></script>
+  <script src="navigate.js"></script>
+</body>
+</html>
