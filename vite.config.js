@@ -8,6 +8,10 @@ export default defineConfig({
   plugins: [react()],
   build: {
     chunkSizeWarningLimit: 1600,
-    rollupOptions: { input: { main: r('./index.html'), about: r('./about.html') } },
+    rollupOptions: { input: {
+      main: r('./index.html'),
+      about: r('./about.html'),
+      thirdPlace: r('./third-place/index.html'),
+    } },
   },
 })
